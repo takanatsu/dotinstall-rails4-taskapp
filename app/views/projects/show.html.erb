@@ -4,7 +4,7 @@
   <% @project.tasks.each do |task| %>
   <li>
     <%= check_box_tag '', '', task.done, {'data-id' => task.id, 'data-project_id' => task.project_id } %>
-    <%= task.title %>
+    <span><%= task.title %></span>
     <%= link_to "[Delete]", project_task_path(task.project_id, task.id), method: :delete,  data: { confirm: "are you sure?" } %>
   </li>
   <% end %>
@@ -20,8 +20,18 @@
 
 <script>
 $(function() {
+  $("input[type=checkbox]").each(function(i, elem) {
+    toggleColor($(elem).next(), $(elem).prop('checked'));
+  })
+
   $("input[type=checkbox]").click(function() {
     $.post('/projects/' + $(this).data('project_id') + '/tasks/' + $(this).data('id') + '/toggle');
+    toggleColor($(this).next(), $(this).prop('checked'));
   });
 });
+
+function toggleColor(elem, isChecked) {
+  var color = isChecked ? '#aaa' : '#000';
+  $(elem).css('color', color);
+}
 </script>
